@@ -1,11 +1,11 @@
 import numpy as np
 
-from .cpu_utils import opcodes as opcode_class
-from .cpu_utils import addr_modes
+from cpu import opcodes
+from cpu import addr_modes
 
 class cpu:
 	# inicialização de utils
-	opcode = opcode_class.opcodes()
+	opcode = opcodes.opcodes()
 	address_mode = addr_modes.addr_modes()
 
 	# construtor
@@ -15,7 +15,7 @@ class cpu:
 		self.acc = np.uint8()
 		self.x = np.uint8()
 		self.y = np.uint8()
-		self.pc = np.uint16()
+		self.pc = np.uint16(value=0x0000)
 
 		# status flags
 		self.p = {
