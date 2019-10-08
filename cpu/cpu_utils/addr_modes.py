@@ -1,7 +1,7 @@
 class addr_modes:
 
 	def ACC(self,cpu):
-		print('hitaccumulator')
+		print('hit accumulator')
 
 	def IMM(self,cpu):
 		print('hit immediate')
@@ -26,7 +26,7 @@ class addr_modes:
 
 
 	def IMP(self,cpu):
-		print('hitaccumulator')
+		print('hit imperative')
 
 
 	def REL(self,cpu):

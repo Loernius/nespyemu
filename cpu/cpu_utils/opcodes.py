@@ -4,3 +4,4 @@ class opcodes:
 
 	def BRK(self, cpu):
 		print('teste')
+

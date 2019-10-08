@@ -1,12 +1,12 @@
 import numpy as np
 
-from . import opcodes as opcode_class
-from . import addr_modes as addr_modes_class
+from .cpu_utils import opcodes as opcode_class
+from .cpu_utils import addr_modes
 
-class CPU:
+class cpu:
 	# inicialização de utils
 	opcode = opcode_class.opcodes()
-	address_mode = addr_modes_class.addr_modes()
+	address_mode = addr_modes.addr_modes()
 
 	# construtor
 	def __init__(self):
@@ -35,6 +35,10 @@ class CPU:
 	def check_op(self, i):
 		if i == 0x00:
 			self.address_mode.IMM(self)
+		elif i == 0x78:
+			self.address_mode.IMP(self)
+		else:
+			print('unexpected opcode')
 
 
 	
