@@ -4,21 +4,24 @@ from cpu import opcodes
 from cpu import addr_modes
 
 class cpu:
-	# inicialização de utils
-	opcode = opcodes.opcodes()
-	address_mode = addr_modes.addr_modes()
-
+	
 	# construtor
 	def __init__(self):
 
 		# registers
-		self.acc = np.uint8()
-		self.x = np.uint8()
-		self.y = np.uint8()
-		self.pc = np.uint16(value=0x0000)
+		self.acc = 0x00
+		self.x = 0x00
+		self.y = 0x00
+		self.pc = 0x0000
+		self.stack_pointer = 0x00
 
+		self.ram = [0] * 0xFFFF
+		self.addr_abs = 0x00
+		self.addr_rel = 0x00
+		
+			
 		# status flags
-		self.p = {
+		self.flags = {
 			"C": False,
 			"Z": False,
 			"I": False,
@@ -27,18 +30,29 @@ class cpu:
 			"V": False,
 			"N": False
 		}
-		
+		self.opcode = opcodes.opcodes()
 
 	# addressing modes
 	
 
 	def check_op(self, i):
 		if i == 0x00:
-			self.address_mode.IMM(self)
+			print('caiu no break')
 		elif i == 0x78:
-			self.address_mode.IMP(self)
+			self.opcode.SEI(self)
 		else:
 			print('unexpected opcode')
+	
+	def read(self, addr):
+		if addr < 0x0000 or addr > 0xFFFF:
+			print('addr out of bounds')
+		else:
+			return self.ram[addr]
 
+	def write(self, addr, data):
+		if addr < 0x0000 or addr > 0xFFFF:
+			print('addr out of bounds')
+		else:
+			self.ram[addr] = data
 
 	

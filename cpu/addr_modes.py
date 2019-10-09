@@ -1,7 +1,7 @@
 class addr_modes:
 
 	def ACC(self,cpu):
-		print('hit accumulator')
+		cpu.addr_abs = cpu.acc
 
 	def IMM(self,cpu):
 		print('hit immediate')

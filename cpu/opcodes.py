@@ -1,6 +1,8 @@
 import numpy as np
 
 class opcodes:
-	def BRK(self, cpu):
-		print('teste')
+	# control instructions
+	def SEI(self, cpu):
+		print('caiu no SEI')
 
+	
