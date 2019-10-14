@@ -37,7 +37,7 @@ class cpu:
 
 	def check_op(self, i):
 		if i == 0x00:
-			print('caiu no break')
+			self.opcode.BRK(self)
 		elif i == 0x78:
 			self.opcode.SEI(self)
 		else:
@@ -55,4 +55,20 @@ class cpu:
 		else:
 			self.ram[addr] = data
 
+	def clock(self, i):
+		print('clock of the computer')
+
+	def reset(self):
+		print('reset the computer')
+
+	def nmi(self):
+		print('non maskable interrupt')
+
+	def irq(self):
+		if self.flags['I'] == True:
+			print('cpu disabled the interrupt')
+		else:
+			print('maskeble interrupt')
+
+	
 	
