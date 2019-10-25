@@ -5,7 +5,6 @@ def main():
 	raw_rom = open('mario.nes', 'rb')
 
 	header = raw_rom.read(4)
-	
 	if header != b'NES\x1a':
 		print('CHECKSUM FAILED')
 	else:
@@ -15,8 +14,7 @@ def main():
 		for i in range(0, 0xFFFF - 0x0800, 1):
 			cpu.ram[0x0800 + i] = int.from_bytes(raw_rom.read(1), 'little')
 			raw_rom.seek(1, 1)
-		# cpu.check_op(instruction)
-		
+		cpu.check_op(0x11)
 
 if __name__ == '__main__':
 	main()
