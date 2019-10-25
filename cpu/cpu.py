@@ -1,6 +1,5 @@
-import numpy as np
-
 from cpu import opcodes
+
 from cpu import addr_modes
 
 class cpu:
@@ -40,11 +39,10 @@ class cpu:
             self.opcode.SEI(self)
 
         elif i == 0x11:
-            self.opcode.add_binary(10, 20)
+            self.opcode.add_binary(13, 5)
 
         else:
             print('unexpected opcode')
-
 
     def read(self, addr):
         if addr < 0x0000 or addr > 0xFFFF:
@@ -73,4 +71,3 @@ class cpu:
             print('cpu disabled the interrupt')
         else:
             print('maskeble interrupt')
-

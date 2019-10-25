@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class opcodes:
     # Jump/Flag instructions
     def SEI(self, cpu):
@@ -81,6 +78,7 @@ class opcodes:
 
     def ADC(self, cpu, addr):
         print('acc = acc + addr')
+        self.add_binary(cpu.acc, addr)
 
     def SBC(self, cpu, addr):
         print('acc = acc - addr')
@@ -211,13 +209,7 @@ class opcodes:
     def XAA(self,cpu,addr):
         print('')
 
-    def LAX(self,cpu,addr):
-        print('')
-
     def AXS(self,cpu,addr):
-        print('')
-
-    def SBC(self,cpu,addr):
         print('')
 
     def AHX(self,cpu,addr):
@@ -236,7 +228,8 @@ class opcodes:
         print('')
 
     def add_binary(self, num1, num2):
-
+        carry = 0
+        result = ''
         if num1 > 0xFF | num2 > 0xFF:
             print('sistema não permite operações com digitos maiores que 255')
             return False
@@ -244,13 +237,39 @@ class opcodes:
         bin1 = bin(num1)[2:]
         bin2 = bin(num2)[2:]
 
-        maxlength = max(len(bin1), len(bin2))
+        maxlength = 8
 
-        if len(bin1)== maxlength:
-            bin2.zfill(maxlength)
-        else:
-            bin1.zfill(maxlength)
+        bin2 = bin2.zfill(maxlength)
 
-        print(bin1)
-        print(bin2)
+        bin1 = bin1.zfill(maxlength)
 
+        for j in range(0, maxlength, 1):
+            i = (maxlength - j)-1
+            # 1 + 1 com e sem carry
+            if ((bin1[i] == '1') & (bin2[i] == '1') & (carry == 0)):
+                result = '0' + result
+                carry = 1
+
+            elif ((bin1[i] == '1') & (bin2[i] == '1') & (carry == 1)):
+                result = '1' + result
+                carry = 1
+
+            # 1 + 0 com e sem carry
+            elif (((bin1[i] == '1') & (bin2[i] == '0') | (bin1[i] == '0') & (bin2[i] == '1')) & (carry == 1)):
+                result = '0' + result
+                carry = 1
+
+            elif (((bin1[i] == '1') & (bin2[i] == '0') | (bin1[i] == '0') & (bin2[i] == '1')) & (carry == 0)):
+                result = '1' + result
+                carry = 0
+
+            # 0 + 0 , nunca levará carry
+            elif ((bin1[i] == '0') & (bin2[i] == '0') & (carry == 1)):
+                result = '1' + result
+                carry = 0
+
+            elif ((bin1[i] == '0') & (bin2[i] == '0') & (carry == 0)):
+                result = '0' + result
+                carry = 0
+        
+        return result, carry
