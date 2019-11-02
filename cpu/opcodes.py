@@ -24,122 +24,152 @@ class opcodes:
     def BRK(self, cpu):
         print('ação de break')
 
-    def BPL(self,cpu,addr):
+    def BPL(self,cpu,data):
         print('branch on N=0')
 
-    def BMI(self,cpu,addr):
+    def BMI(self,cpu,data):
         print('branch on N=1')
 
-    def BVC(self,cpu,addr):
+    def BVC(self,cpu,data):
         print('branch on V=0')
 
-    def BVS(self,cpu,addr):
+    def BVS(self,cpu,data):
         print('branch on V=1')
 
-    def BCC(self,cpu,addr):
+    def BCC(self,cpu,data):
         print('branch on C=0')
 
-    def BCS(self,cpu,addr):
+    def BCS(self,cpu,data):
         print('branch on C=1')
 
-    def BNE(self,cpu,addr):
+    def BNE(self,cpu,data):
         print('branch on Z=0')
 
-    def BEQ(self,cpu,addr):
+    def BEQ(self,cpu,data):
         print('branch on Z=1')
 
     def RTI(self,cpu):
         print('P,PC:=+(S)')
 
-    def JSR(self,cpu,addr):
-        print('(S)-:=PC; PC:=addr')
+    def JSR(self,cpu,data):
+        print('(S)-:=PC; PC:=data')
 
     def RTS(self,cpu):
         print('PC:=+(S)')
 
-    def JMP(self,cpu,addr):
-        print('PC:=addr')
+    def JMP(self,cpu,data):
+        print('PC:=data')
 
-    def BIT(self,cpu,addr):
-        print('N:=byte 7; V:=byte 6; Z:=A&addr')
+    def BIT(self,cpu,data):
+        print('N:=byte 7; V:=byte 6; Z:=A&data')
 
     def NOP(self,cpu):
         print('nothing')
 
     # logical and aritmetical commands
-    def ORA(self, cpu, addr):
-        cpu.acc = cpu.acc & addr
+    def ORA(self, cpu, data):
+        cpu.acc = cpu.acc & data
 
-    def AND(self, cpu, addr):
-        cpu.acc = cpu.acc & addr
+    def AND(self, cpu, data):
+        cpu.acc = cpu.acc & data
 
-    def EOR(self, cpu, addr):
-        cpu.acc = cpu.acc ^ addr
+    def EOR(self, cpu, data):
+        cpu.acc = cpu.acc ^ data
 
-    def ADC(self, cpu, addr):
-        print('acc = acc + addr')
-        self.add_binary(cpu.acc, addr)
+    def ADC(self, cpu, data):
+        carry = 1 if cpu.flags['C'] == True else 0
+        result = (cpu.acc + data + carry) & 0xFF
+        #if (result & 0x80) != (self.A & 80):
+        #ref: http://nesdev.parodius.com/bbs/viewtopic.php?t=6331&sid=c635c096178295cde45bd5e7ba0d2ca5
+        if (cpu.acc ^ result) & (result ^ result) & 0x80:
+            cpu.flags['V'] = 1
+        else:
+            cpu.flags['V'] = 0
+        
+        if result > 0xFF:
+            cpu.flags['C'] = 1
+            result = 0xFF - result
+        else:
+            cpu.flags['C'] = 0
+        
+        cpu.acc = result & 0xFF
 
-    def SBC(self, cpu, addr):
-        print('acc = acc - addr')
+    def SBC(self, cpu, data):
+        data = ~data
+        carry = 1 if cpu.flags['C'] == True else 0
+        result = (cpu.acc + data + carry) & 0xFF
+        #if (result & 0x80) != (self.A & 80):
+        #ref: http://nesdev.parodius.com/bbs/viewtopic.php?t=6331&sid=c635c096178295cde45bd5e7ba0d2ca5
+        if (cpu.acc ^ result) & (result ^ result) & 0x80:
+            cpu.flags['V'] = 1
+        else:
+            cpu.flags['V'] = 0
+        
+        if result > 0xFF:
+            cpu.flags['C'] = 1
+            result = 0xFF - result
+        else:
+            cpu.flags['C'] = 0
+        
+        cpu.acc = result & 0xFF
 
-    def CMP(self, cpu, addr):
-        print('acc-addr')
+    def CMP(self, cpu, data):
+        print('acc-data')
 
-    def CPX(self, cpu, addr):
-        print('X-addr')
+    def CPX(self, cpu, data):
+        print('X-data')
 
-    def CPY(self,cpu,addr):
-        print('Y-addr')
+    def CPY(self,cpu,data):
+        print('Y-data')
 
-    def DEC(self,cpu,addr):
-        print('addr = addr-1')
+    def DEC(self,cpu,data):
+        print('data = data-1')
 
-    def DEX(self,cpu,addr):
+    def DEX(self,cpu,data):
         print('x = x-1')
 
-    def DEY(self,cpu,addr):
+    def DEY(self,cpu,data):
         print('y = y-1')
 
-    def INC(self,cpu,addr):
-        print('addr = addr+1')
+    def INC(self,cpu,data):
+        print('data = data+1')
 
-    def INX(self,cpu,addr):
+    def INX(self,cpu,data):
         print('x = x+1')
 
-    def INY(self,cpu,addr):
+    def INY(self,cpu,data):
         print('y=y+1')
 
-    def ASL(self,cpu,addr):
-        print('addr = addr*2')
+    def ASL(self,cpu,data):
+        print('data = data*2')
 
-    def ROL(self,cpu,addr):
-        print('addr = addr*2+C')
+    def ROL(self,cpu,data):
+        print('data = data*2+C')
 
-    def LSR(self,cpu,addr):
-        print('addr = addr/2')
+    def LSR(self,cpu,data):
+        print('data = data/2')
 
-    def ROR(self,cpu,addr):
-        print('addr = addr/2+C*128')
+    def ROR(self,cpu,data):
+        print('data = data/2+C*128')
 
     # move commands
-    def LDA(self,cpu,addr):
-        print('a:=addr')
+    def LDA(self,cpu,data):
+        print('a:=data')
 
-    def STA(self,cpu,addr):
+    def STA(self,cpu,data):
         print('adr:=A')
 
-    def LDX(self,cpu,addr):
-        print('x:=addr')
+    def LDX(self,cpu,data):
+        print('x:=data')
 
-    def STX(self,cpu,addr):
-        print('addr:=x')
+    def STX(self,cpu,data):
+        print('data:=x')
 
-    def LDY(self,cpu,addr):
-        print('y:=addr')
+    def LDY(self,cpu,data):
+        print('y:=data')
 
-    def STY(self,cpu,addr):
-        print('addr:=y')
+    def STY(self,cpu,data):
+        print('data:=y')
 
     def TAX(self,cpu):
         print('x:=acc')
@@ -173,103 +203,56 @@ class opcodes:
 
     # illegal opcodes
 
-    def SLO(self,cpu,addr):
+    def SLO(self,cpu,data):
         print('ASL {adr} + ORA {adr}')
 
-    def RLA(self,cpu,addr):
+    def RLA(self,cpu,data):
         print('ROL {adr} + AND {adr}')
 
-    def SRE(self,cpu,addr):
+    def SRE(self,cpu,data):
         print('LSR {adr} + EOR {adr}')
 
-    def RRA(self,cpu,addr):
+    def RRA(self,cpu,data):
         print('ROR {adr} + ADC {adr}')
 
-    def SAX(self,cpu,addr):
-        print('addr:=acc&X')
+    def SAX(self,cpu,data):
+        print('data:=acc&X')
 
-    def LAX(self,cpu,addr):
+    def LAX(self,cpu,data):
         print('LDA {adr} + LDX {adr}')
 
-    def DCP(self,cpu,addr):
+    def DCP(self,cpu,data):
         print('DEC {adr} + CMP {adr}')
 
-    def ISC(self,cpu,addr):
+    def ISC(self,cpu,data):
         print('INC {adr} + SBC {adr}')
 
-    def ANC(self,cpu,addr):
+    def ANC(self,cpu,data):
         print('A:=A&#{imm}')
 
-    def ALR(self,cpu,addr):
+    def ALR(self,cpu,data):
         print('A:=(A&#{imm})/2')
 
-    def ARR(self,cpu,addr):
+    def ARR(self,cpu,data):
         print('')
 
-    def XAA(self,cpu,addr):
+    def XAA(self,cpu,data):
         print('')
 
-    def AXS(self,cpu,addr):
+    def AXS(self,cpu,data):
         print('')
 
-    def AHX(self,cpu,addr):
+    def AHX(self,cpu,data):
         print('')
 
-    def SHY(self,cpu,addr):
+    def SHY(self,cpu,data):
         print('')
 
-    def SHX(self,cpu,addr):
+    def SHX(self,cpu,data):
         print('')
 
-    def TAS(self,cpu,addr):
+    def TAS(self,cpu,data):
         print('')
 
-    def LAS(self,cpu,addr):
+    def LAS(self,cpu,data):
         print('')
-
-    def add_binary(self, num1, num2):
-        carry = 0
-        result = ''
-        if num1 > 0xFF | num2 > 0xFF:
-            print('sistema não permite operações com digitos maiores que 255')
-            return False
-
-        bin1 = bin(num1)[2:]
-        bin2 = bin(num2)[2:]
-
-        maxlength = 8
-
-        bin2 = bin2.zfill(maxlength)
-
-        bin1 = bin1.zfill(maxlength)
-
-        for j in range(0, maxlength, 1):
-            i = (maxlength - j)-1
-            # 1 + 1 com e sem carry
-            if ((bin1[i] == '1') & (bin2[i] == '1') & (carry == 0)):
-                result = '0' + result
-                carry = 1
-
-            elif ((bin1[i] == '1') & (bin2[i] == '1') & (carry == 1)):
-                result = '1' + result
-                carry = 1
-
-            # 1 + 0 com e sem carry
-            elif (((bin1[i] == '1') & (bin2[i] == '0') | (bin1[i] == '0') & (bin2[i] == '1')) & (carry == 1)):
-                result = '0' + result
-                carry = 1
-
-            elif (((bin1[i] == '1') & (bin2[i] == '0') | (bin1[i] == '0') & (bin2[i] == '1')) & (carry == 0)):
-                result = '1' + result
-                carry = 0
-
-            # 0 + 0 , nunca levará carry
-            elif ((bin1[i] == '0') & (bin2[i] == '0') & (carry == 1)):
-                result = '1' + result
-                carry = 0
-
-            elif ((bin1[i] == '0') & (bin2[i] == '0') & (carry == 0)):
-                result = '0' + result
-                carry = 0
-        
-        return result, carry

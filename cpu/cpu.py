@@ -27,16 +27,16 @@ class cpu:
                     "V": False,
                     "N": False
                 }
+
+                self.carry = 0x00
                 self.opcode = opcodes.opcodes()
+                self.debug_mode_on = False
 
     # addressing modes
 
     def check_op(self, i):
         if i == 0x00:
             self.opcode.BRK(self)
-
-        elif i == 0x78:
-            self.opcode.SEI(self)
 
         elif i == 0x11:
             self.opcode.add_binary(13, 5)
